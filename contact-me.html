@@ -8,11 +8,24 @@
     <title>Contact Me</title>
   </head>
   <body>
-    <h1>Contact Me</h1>
-    <form action="post" class="flex-container">
-      <label for="message">Enter your message Below</label>
-      <textarea name="message" id="" cols="30" rows="10"></textarea>
-      <button type="button">Send Message</button>
-    </form>
+    <header>
+      <nav class="nav">
+        <h1>Contact Me</h1>
+        <ul class="nav-list">
+          <li class="nav-link"><a href="/">Home</a></li>
+          <li class="nav-link"><a href="/about">About Me</a></li>
+          <li class="nav-link"><a href="/contact-me">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <div class="flex-container">
+        <form action="post" class="flex-container">
+          <label for="message">Enter your message Below</label>
+          <textarea name="message" id="" cols="50" rows="10"></textarea>
+          <button type="button">Send Message</button>
+        </form>
+      </div>
+    </main>
   </body>
 </html>
