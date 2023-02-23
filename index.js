@@ -26,7 +26,16 @@ const server = http.createServer((req, res) => {
     path.join(__dirname, `${contentDir}`, `${fileName}${extension}`),
     (err, content) => {
       if (err) {
-        console.error(err);
+        // 404 Error
+        if (err.code === "ENOENT") {
+          res.writeHead(404, { "Content-Type": "html" });
+          fs.readFile(path.join(__dirname, "404.html"), (err, content) => {
+            if (err) {
+              console.error(err);
+            }
+            res.end(content);
+          });
+        }
       } else {
         res.writeHead(200, { "Content-Type": `${contentType}` });
         res.end(content);
