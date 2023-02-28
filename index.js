@@ -1,51 +1,36 @@
-const http = require("http");
+const express = require("express");
+const { existsSync } = require("fs");
 const path = require("path");
-const fs = require("fs");
 
-const server = http.createServer((req, res) => {
-  const fileName = path.parse(req.url).name || "index";
-  const extension = path.extname(req.url) || ".html";
+const app = express();
 
-  let contentType = "text/html";
-  let contentDir = "";
+app.use(express.static(path.join(__dirname, "/css")));
+app.use(express.static(path.join(__dirname, "/images")));
 
-  switch (extension) {
-    case ".js":
-      contentType = "text/javascript";
-      break;
-    case ".css":
-      contentType = "text/css";
-      contentDir = "css";
-      break;
-    case ".jpg":
-      contentType = "image/jpg";
-      contentDir = "images";
-  }
-
-  fs.readFile(
-    path.join(__dirname, `${contentDir}`, `${fileName}${extension}`),
-    (err, content) => {
-      if (err) {
-        // 404 Error
-        if (err.code === "ENOENT") {
-          res.writeHead(404, { "Content-Type": "html" });
-          fs.readFile(path.join(__dirname, "404.html"), (err, content) => {
-            if (err) {
-              console.error(err);
-            }
-            res.end(content);
-          });
-        }
-      } else {
-        res.writeHead(200, { "Content-Type": `${contentType}` });
-        res.end(content);
-      }
-    }
-  );
+app.get("/", (req, res) => {
+  // await readFile("./index.html", "utf8").then((content) => res.send(content));
+  res.sendFile(path.join(__dirname, "/index.html"));
 });
 
-let PORT = process.env.PORT || 5000;
+app.get("/about", (req, res) => {
+  res.sendFile(path.join(__dirname, "/about.html"));
+});
 
-server.listen(PORT, () => {
+app.get("/contact-me", (req, res) => {
+  res.sendFile(path.join(__dirname, "/contact-me.html"));
+});
+
+app.use((req, res, next) => {
+  const filePath = path.join(__dirname, `${req.url}`);
+  if (existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).sendFile(path.join(__dirname, "/404.html"));
+  }
+});
+
+let PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
 });
